@@ -1,6 +1,6 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const bounceSound = document.getElementById('bounceSound');
+// const bounceSound = document.getElementById('bounceSound');
 const totalDuration = 16000000;
 const starRadius = 50;
 const initialPlanetSize = 10;
@@ -116,8 +116,8 @@ function animate() {
             const dist = Math.sqrt((planet.x - otherPlanet.x) ** 2 + (planet.y - otherPlanet.y) ** 2);
             const canCollide = (currentTime - planet.lastCollision > collisionDelay) && (currentTime - otherPlanet.lastCollision > collisionDelay) && (planet.radius == otherPlanet.radius);
             if (dist < planet.radius + otherPlanet.radius && canCollide) {
-                bounceSound.currentTime = 0;
-                bounceSound.play();
+                // bounceSound.currentTime = 0;
+                // bounceSound.play();
                 planet.lastCollision = currentTime;
                 otherPlanet.lastCollision = currentTime;
                 planets.splice(i, 1);
