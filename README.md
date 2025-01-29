@@ -2,6 +2,8 @@
 
 This project is a canvas-based gravity simulation that models the motion of planets under the influence of gravity. A central star exerts gravitational force on the planets, which orbit and interact dynamically. Planets can collide with each other, split into smaller fragments, or be absorbed by the central star.
 
+Adjusted for different screen resolutions.
+
 ## Features
 
 - **Gravity Dynamics**: Planets are attracted to the central star based on the inverse-square law.
@@ -75,6 +77,7 @@ The simulation approximates conservation of energy and momentum during collision
 
 ### Recording Feature
 The animation can be recorded using the `MediaRecorder` API. Uncomment the `startRecording()` function to enable recording. The recording will automatically stop after a set duration.
+Removed in last commit :|
 
 ## How to Run
 

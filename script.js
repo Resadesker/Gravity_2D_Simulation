@@ -1,10 +1,13 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-// const bounceSound = document.getElementById('bounceSound');
-const totalDuration = 16000000;
-const starRadius = 50;
-const initialPlanetSize = 10;
-const gravity = 250;
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const scaleFactor = 0.5;
+const starRadius = 50 * scaleFactor;
+const initialPlanetSize = 10 * scaleFactor;
+const gravity = 250 * scaleFactor;
 const collisionDelay = 500;
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -66,8 +69,8 @@ let planets = [];
 for (let i = 0; i < 100; i++) {
     const x = Math.random() * canvasWidth;
     const y = Math.random() * canvasHeight;
-    const dx = (Math.random() - 0.5) * 4;
-    const dy = (Math.random() - 0.5) * 4;
+    const dx = (Math.random() - 0.5) * 2;
+    const dy = (Math.random() - 0.5) * 2;
     planets.push(new Planet(x, y, dx, dy, initialPlanetSize));
 }
 
@@ -81,8 +84,8 @@ function drawStar() {
 function splitPlanet(planet) {
     const smallerPlanets = [];
     for (let i = 0; i < 4; i++) {
-        const dx = (Math.random() - 0.5) * 4;
-        const dy = (Math.random() - 0.5) * 4;
+        const dx = (Math.random() - 0.5) * 2;
+        const dy = (Math.random() - 0.5) * 2;
         if (planet.radius * 0.5 > 0.5)
             smallerPlanets.push(new Planet(planet.x, planet.y, dx, dy, planet.radius * 0.5));
     }
@@ -91,11 +94,6 @@ function splitPlanet(planet) {
 
 function animate() {
     const currentTime = Date.now();
-    // uncomment to save recording after some time
-    // if (currentTime - startTime >= totalDuration) {
-    //     stopRecording();
-    //     return;
-    // }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
@@ -114,10 +112,11 @@ function animate() {
         for (let j = i - 1; j >= 0; j--) {
             const otherPlanet = planets[j];
             const dist = Math.sqrt((planet.x - otherPlanet.x) ** 2 + (planet.y - otherPlanet.y) ** 2);
-            const canCollide = (currentTime - planet.lastCollision > collisionDelay) && (currentTime - otherPlanet.lastCollision > collisionDelay) && (planet.radius == otherPlanet.radius);
+            const canCollide = (currentTime - planet.lastCollision > collisionDelay) && 
+                               (currentTime - otherPlanet.lastCollision > collisionDelay) && 
+                               (planet.radius === otherPlanet.radius);
+
             if (dist < planet.radius + otherPlanet.radius && canCollide) {
-                // bounceSound.currentTime = 0;
-                // bounceSound.play();
                 planet.lastCollision = currentTime;
                 otherPlanet.lastCollision = currentTime;
                 planets.splice(i, 1);
@@ -133,35 +132,4 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-let recordedChunks = [];
-const stream = canvas.captureStream(25);
-const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
-
-mediaRecorder.ondataavailable = function (event) {
-    if (event.data.size > 0) {
-        recordedChunks.push(event.data);
-    }
-};
-
-mediaRecorder.onstop = function () {
-    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = 'canvas-animation.webm';
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(url);
-};
-
-function startRecording() {
-    mediaRecorder.start();
-}
-
-function stopRecording() {
-    mediaRecorder.stop();
-}
-
-// startRecording();
 animate();
